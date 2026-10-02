@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Care Chronicle • Assistive Outpatient Oncology Assistant</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-800/95 backdrop-blur border-b border-slate-200 dark:border-slate-700 px-4 lg:px-8 py-3 transition-colors">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Left: App Brand & Subtitle -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
+          <i data-lucide="activity" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 id="ui-app-title" class="text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+            Care Chronicle
+          </h1>
+          <p id="ui-app-subtitle" class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">
+            Assistive Outpatient Oncology Assistant
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: Global Controls & Regulatory Pill -->
+      <div class="flex flex-wrap items-center gap-3">
+        
+        <!-- Regulatory Pill Badge -->
+        <div class="badge-regulatory" title="Strict non-diagnostic workflow assistance using synthetic anonymized records">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="ui-badge-regulatory">Non-Diagnostic Assistive Tool • 100% Synthetic Records</span>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-700/60 rounded-lg px-2.5 py-1.5 border border-slate-200 dark:border-slate-600 text-xs">
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"></i>
+          <label for="languageSelect" class="sr-only">Language</label>
+          <select id="languageSelect" class="bg-transparent font-medium text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="mr">मराठी</option>
+            <option value="bn">বাংলা</option>
+            <option value="te">తెలుగు</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+
+        <!-- Light / Dark Mode Toggle -->
+        <button id="themeToggleBtn" aria-label="Toggle Light and Dark Mode" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition">
+          <i id="themeIcon" data-lucide="moon" class="w-4 h-4"></i>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+
+    <!-- TOP BANNER: PATIENT SELECTOR & CHART REVIEW PREP TIMER -->
+    <section class="chronicle-card p-5 bg-gradient-to-r from-white via-sky-50/30 to-white dark:from-slate-800 dark:via-slate-800/80 dark:to-slate-800 border-l-4 border-l-sky-500 overflow-hidden">
+      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+        
+        <!-- Patient Selector Dropdown & Demographics -->
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+            <i data-lucide="user-check" class="w-4 h-4 text-sky-600 dark:text-sky-400"></i>
+            <span id="ui-patient-selector-label">Active Patient Record:</span>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-3">
+            <select id="patientSelect" class="w-full sm:w-auto max-w-full sm:max-w-md lg:max-w-lg bg-white dark:bg-slate-900 border-2 border-sky-500/40 focus:border-sky-500 text-slate-900 dark:text-white font-bold text-sm sm:text-base rounded-xl px-4 py-2.5 shadow-sm focus:outline-none cursor-pointer truncate">
+              <!-- Dynamically populated with 5 synthetic patients -->
+            </select>
+
+            <div id="patientMetaPill" class="text-xs px-3 py-1.5 rounded-lg bg-sky-100/80 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300 font-medium border border-sky-200 dark:border-sky-800 flex items-center gap-2 flex-shrink-0">
+              <span id="patAgeGender">58M</span> • 
+              <span id="patMRN">MRN: SYN-ONC-8812</span> • 
+              <span id="patCycle">Cycle 3 of 12</span>
+            </div>
+          </div>
+
+          <div class="mt-2 text-xs text-slate-600 dark:text-slate-300 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span><strong class="text-slate-700 dark:text-slate-200">Diagnosis:</strong> <span id="patDiagnosis">Stage IIIB Sigmoid Colon Adenocarcinoma (pT3N2aM0, MSS)</span></span>
+            <span><strong class="text-slate-700 dark:text-slate-200">Oncologist:</strong> <span id="patPhysician">Dr. Arvind V. Kulkarni, MD, DM</span></span>
+          </div>
+        </div>
+
+        <!-- Review Timer & KPI Metrics Hub -->
+        <div class="flex-shrink-0 flex flex-wrap items-center gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm self-start xl:self-center">
+          
+          <!-- KPI 1: Active Review Timer -->
+          <div class="flex items-center space-x-3 pr-3 border-r border-slate-200 dark:border-slate-700">
+            <div class="w-10 h-10 rounded-lg bg-sky-100 dark:bg-sky-900/50 flex items-center justify-center text-sky-600 dark:text-sky-400">
+              <i data-lucide="timer" class="w-5 h-5 animate-pulse"></i>
+            </div>
+            <div>
+              <div class="text-[10px] font-semibold uppercase text-slate-400 dark:text-slate-500 tracking-wide" id="ui-chart-review-timer">
+                Preparation Timer
+              </div>
+              <div id="activeTimerDisplay" class="text-xl font-mono font-bold text-sky-600 dark:text-sky-400">
+                00:00
+              </div>
+            </div>
+          </div>
+
+          <!-- Finish Review Action Button -->
+          <button id="btnFinishReview" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-medium text-xs rounded-lg shadow-sm transition flex items-center space-x-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span id="ui-btn-finished-review">Finished Chart Review</span>
+          </button>
+
+          <!-- KPI 1 Sub-minute Prep Benchmark -->
+          <div class="px-3 py-1 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 text-center">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="ui-kpi-prep-time">Prep Time</div>
+            <div id="kpiPrepTimeVal" class="text-sm font-bold text-emerald-600 dark:text-emerald-400">51s</div>
+            <div class="text-[9px] text-slate-500" id="ui-kpi-prep-sub">Sub-minute achieved</div>
+          </div>
+
+          <!-- KPI 2 Handoff Lag Benchmark -->
+          <div class="px-3 py-1 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 text-center">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold" id="ui-kpi-handoff-lag">Handoff Lag</div>
+            <div id="kpiHandoffVal" class="text-sm font-bold text-sky-600 dark:text-sky-400">2.4m avg</div>
+            <div class="text-[9px] text-slate-500" id="ui-kpi-handoff-sub">vs. batching</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- REFINED TREATMENT CYCLE & ONCOLOGY MILESTONE TRACKER -->
+      <div class="mt-4 pt-4 border-t border-slate-200/80 dark:border-slate-700/80">
+        <div class="p-3.5 rounded-xl bg-slate-100/70 dark:bg-slate-750 border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          
+          <!-- Cycle Progress & Regimen Indicator -->
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
+              <i data-lucide="calendar-clock" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <span>Active Treatment Cycle & Oncology Milestone</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              </div>
+              <div id="cycleTrackerTitle" class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 mt-0.5">
+                Cycle 3 of 12 (mFOLFOX-6 Infusion) • Scheduled for Tomorrow
+              </div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex flex-wrap items-center gap-x-3">
+                <span><strong>Date & Time:</strong> <span id="cycleTrackerDate">03-Oct-2026 • 08:30 AM</span></span>
+                <span class="text-slate-300 dark:text-slate-600">•</span>
+                <span class="text-sky-600 dark:text-sky-400 font-semibold" id="cycleTrackerNextRestaging">Next Restaging: Post-Cycle 4 CT Scan (24-Oct-2026)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Cycle Badge -->
+          <div class="flex items-center space-x-2 self-start md:self-center flex-shrink-0">
+            <span id="cycleTrackerPill" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-300 border border-sky-200 dark:border-sky-800 shadow-2xs">
+              Cycle 3 / 12
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FEATURE 3: WHAT CHANGED DELTA SNAPSHOT BOX (POLISHED & NATURAL) -->
+      <div class="mt-3">
+        <div class="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/90 dark:border-amber-900/40 rounded-xl p-4 shadow-2xs">
+          <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center space-x-2 text-slate-900 dark:text-slate-100 font-bold text-sm">
+              <i data-lucide="clipboard-list" class="w-4 h-4 text-sky-600 dark:text-sky-400"></i>
+              <span id="ui-delta-title">What Changed (Operational Delta Snapshot)</span>
+            </div>
+            <span id="deltaImpactBadge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              Stable & Ready for Infusion
+            </span>
+          </div>
+
+          <!-- 3-Point High-Level Operational Summary (Natural, Human-Authored) -->
+          <ul id="deltaPointsList" class="space-y-2 text-xs text-slate-700 dark:text-slate-300">
+            <!-- Dynamically populated -->
+          </ul>
+
+          <div class="mt-2.5 pt-2 border-t border-amber-200/50 dark:border-amber-900/30 text-[11px] text-slate-500 dark:text-slate-400">
+            <span>Last compared against baseline: <strong id="deltaLastComparedDate" class="text-slate-700 dark:text-slate-200">30-Sep-2026</strong></span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 3-COLUMN MAIN DASHBOARD ARCHITECTURE -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- COLUMN 1: OMNICHANNEL INTAKE & INGESTION HUB (4 Cols on lg) -->
+      <section class="lg:col-span-4 space-y-4">
+        <div class="chronicle-card p-5">
+          
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 id="ui-col1-title" class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i data-lucide="file-input" class="w-4 h-4 text-sky-600 dark:text-sky-400"></i>
+                Omnichannel Ingestion Hub
+              </h2>
+              <p id="ui-col1-subtitle" class="text-xs text-slate-500 dark:text-slate-400">
+                Background multi-format parser & indexer
+              </p>
+            </div>
+            <span class="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">
+              OCR Engine
+            </span>
+          </div>
+
+          <!-- Drag & Drop Upload Zone -->
+          <div id="dropZone" class="border-2 border-dashed border-sky-300 dark:border-sky-800 hover:border-sky-500 bg-sky-50/50 dark:bg-sky-950/20 rounded-xl p-4 text-center cursor-pointer transition group">
+            <input type="file" id="fileInput" class="hidden" accept=".pdf,.png,.jpg,.jpeg,.dcm,.txt">
+            <div class="w-10 h-10 mx-auto rounded-full bg-sky-100 dark:bg-sky-900/60 flex items-center justify-center text-sky-600 dark:text-sky-400 group-hover:scale-110 transition mb-2">
+              <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+            </div>
+            <p id="ui-drag-drop-text" class="text-xs font-semibold text-slate-700 dark:text-slate-200">
+              Drag and drop clinical scans, PDFs, or lab reports here
+            </p>
+            <p id="ui-or-click-browse" class="text-[11px] text-slate-400 mt-1">
+              or browse files on device
+            </p>
+            <p class="text-[9px] text-slate-400 mt-2">
+              Supports CT, MRI, Histopathology, and CBC blood panels
+            </p>
+          </div>
+
+          <!-- Quick Ingestion Samples (1-Click Pipeline Testing) -->
+          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700">
+            <div class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-2 flex items-center justify-between">
+              <span id="ui-quick-sample-heading">Quick Ingestion Samples (Click to test background pipeline):</span>
+              <span class="text-[9px] text-sky-600 dark:text-sky-400">Instant Sim</span>
+            </div>
+            <div class="grid grid-cols-1 gap-2">
+              <button onclick="handleSampleIngest('ct_scan')" class="text-left px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-750 hover:bg-sky-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-medium transition flex items-center justify-between group">
+                <span class="flex items-center gap-2">
+                  <i data-lucide="scan" class="w-3.5 h-3.5 text-purple-500"></i>
+                  <span id="ui-btn-sample-ct">Sample CT Abdomen Scan</span>
+                </span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition"></i>
+              </button>
+              
+              <button onclick="handleSampleIngest('histopathology')" class="text-left px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-750 hover:bg-sky-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-medium transition flex items-center justify-between group">
+                <span class="flex items-center gap-2">
+                  <i data-lucide="microscope" class="w-3.5 h-3.5 text-amber-500"></i>
+                  <span id="ui-btn-sample-histo">Sample Histopathology Report</span>
+                </span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition"></i>
+              </button>
+
+              <button onclick="handleSampleIngest('cbc_panel')" class="text-left px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-750 hover:bg-sky-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-medium transition flex items-center justify-between group">
+                <span class="flex items-center gap-2">
+                  <i data-lucide="droplet" class="w-3.5 h-3.5 text-red-500"></i>
+                  <span id="ui-btn-sample-cbc">Sample CBC Blood Panel</span>
+                </span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- INGESTED DOCUMENT HUB (Processed Files List) -->
+          <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700">
+            <div class="flex items-center justify-between mb-2">
+              <h3 id="ui-ingested-hub-title" class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">
+                Processed Clinical Archive
+              </h3>
+              <span id="docCountBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 font-semibold">
+                3 files
+              </span>
+            </div>
+
+            <!-- Documents Container -->
+            <div id="ingestedDocsContainer" class="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+              <!-- Dynamically populated cards with [View] buttons -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- COLUMN 2: LONGITUDINAL PATIENT JOURNEY TIMELINE & PATIENT HISTORY ARCHIVE -->
+      <section class="lg:col-span-4 space-y-4">
+        <div class="chronicle-card p-5">
+          
+          <!-- Column 2 Header & Primary View Switcher -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-slate-200 dark:border-slate-700">
+            <div>
+              <h2 id="ui-col2-title" class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i data-lucide="git-commit" class="w-4 h-4 text-sky-600 dark:text-sky-400"></i>
+                <span id="col2HeaderTitle">Patient Journey Timeline</span>
+              </h2>
+              <p id="ui-col2-subtitle" class="text-xs text-slate-500 dark:text-slate-400">
+                Longitudinal milestones & archived records
+              </p>
+            </div>
+
+            <!-- Primary Tab Switcher: Timeline vs Patient History Archive -->
+            <div class="flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-semibold self-start sm:self-auto">
+              <button onclick="switchColumn2View('timeline')" id="btnViewTimeline" class="px-2.5 py-1 rounded-md transition flex items-center gap-1 bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-300 shadow-2xs">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                <span>Timeline</span>
+              </button>
+              <button onclick="switchColumn2View('history')" id="btnViewHistory" class="px-2.5 py-1 rounded-md transition flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                <i data-lucide="archive" class="w-3.5 h-3.5"></i>
+                <span>Patient History</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- VIEW 1: ACTIVE JOURNEY TIMELINE -->
+          <div id="timelineViewWrapper" class="space-y-4">
+            <!-- Timeline Filter Tabs -->
+            <div class="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-medium">
+              <button onclick="setTimelineFilter('All')" id="tabAll" class="flex-1 py-1.5 rounded-md transition text-center bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-300 shadow-sm font-semibold">
+                <span id="ui-filter-all">All Events</span>
+              </button>
+              <button onclick="setTimelineFilter('Chemo')" id="tabChemo" class="flex-1 py-1.5 rounded-md transition text-center text-slate-600 dark:text-slate-400 hover:text-slate-900">
+                <span id="ui-filter-chemo">Chemo</span>
+              </button>
+              <button onclick="setTimelineFilter('Scans')" id="tabScans" class="flex-1 py-1.5 rounded-md transition text-center text-slate-600 dark:text-slate-400 hover:text-slate-900">
+                <span id="ui-filter-scans">Scans</span>
+              </button>
+              <button onclick="setTimelineFilter('Surgery')" id="tabSurgery" class="flex-1 py-1.5 rounded-md transition text-center text-slate-600 dark:text-slate-400 hover:text-slate-900">
+                <span id="ui-filter-surgery">Surgery</span>
+              </button>
+            </div>
+
+            <!-- Interactive Vertical Timeline Container -->
+            <div class="timeline-stem space-y-4 max-h-[560px] overflow-y-auto pr-1" id="timelineContainer">
+              <!-- Dynamically populated chronological milestones -->
+            </div>
+          </div>
+
+          <!-- VIEW 2: DEDICATED PATIENT HISTORY ARCHIVE -->
+          <div id="historyViewWrapper" class="hidden space-y-4 max-h-[620px] overflow-y-auto pr-1">
+            <!-- Dynamically populated via renderPatientHistory() -->
+          </div>
+
+        </div>
+      </section>
+
+      <!-- COLUMN 3: QUICK HANDOFF VOICE MEMO & ACTION LOG (4 Cols on lg) -->
+      <section class="lg:col-span-4 space-y-4">
+        
+        <!-- VOICE DICTATION CARD -->
+        <div class="chronicle-card p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 id="ui-col3-title" class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i data-lucide="mic" class="w-4 h-4 text-rose-500"></i>
+                Quick Handoff Voice Memo
+              </h2>
+              <p id="ui-col3-subtitle" class="text-xs text-slate-500 dark:text-slate-400">
+                Post-visit dictation & task checklist
+              </p>
+            </div>
+            <span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-semibold px-2 py-0.5 rounded">
+              Voice-to-Task
+            </span>
+          </div>
+
+          <!-- Live Record Button -->
+          <div class="space-y-3">
+            <button id="btnRecordLive" class="w-full py-3 px-4 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 text-white bg-rose-600 hover:bg-rose-700 shadow-sm transition active:scale-98">
+              <i data-lucide="mic" class="w-4 h-4" id="recordIcon"></i>
+              <span id="ui-btn-record-live">Tap to Record 30s Summary</span>
+            </button>
+
+            <!-- Reliable Fallback Button -->
+            <button id="btnPasteFallback" onclick="handlePasteSampleVoiceMemo()" class="w-full py-2 px-3 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-medium text-xs transition flex items-center justify-center space-x-1.5">
+              <i data-lucide="clipboard-copy" class="w-3.5 h-3.5 text-slate-400"></i>
+              <span id="ui-btn-paste-fallback">[Click to paste sample voice note]</span>
+            </button>
+          </div>
+
+          <!-- Recording Waveform & Status (Hidden until active) -->
+          <div id="recordingStatus" class="hidden mt-3 p-3 bg-rose-50 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-900 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping"></div>
+              <span class="text-xs font-semibold text-rose-700 dark:text-rose-300">Listening to clinician...</span>
+            </div>
+            <div class="flex items-center space-x-1 h-6">
+              <div class="waveform-bar" style="animation-delay: 0.1s"></div>
+              <div class="waveform-bar" style="animation-delay: 0.3s"></div>
+              <div class="waveform-bar" style="animation-delay: 0.2s"></div>
+              <div class="waveform-bar" style="animation-delay: 0.5s"></div>
+              <div class="waveform-bar" style="animation-delay: 0.4s"></div>
+            </div>
+          </div>
+
+          <!-- Transcribed Text Box -->
+          <div class="mt-3">
+            <label class="text-[11px] font-semibold text-slate-500 uppercase block mb-1" id="ui-transcript-heading">
+              Transcribed Clinical Memo:
+            </label>
+            <div id="transcriptBox" class="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 min-h-[64px] max-h-[110px] overflow-y-auto italic">
+              "No active memo recorded yet. Tap record or use the sample button above."
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMINISTRATIVE ACTION TASK CHECKLIST -->
+        <div class="chronicle-card p-5">
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <h3 id="ui-tasks-heading" class="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
+                Administrative Action Task Checklist
+              </h3>
+              <p id="ui-tasks-sub" class="text-[11px] text-slate-500 dark:text-slate-400">
+                Interactive post-visit tasks. Check to log completion.
+              </p>
+            </div>
+            <span id="taskCountCompleted" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold">
+              1 / 4 Complete
+            </span>
+          </div>
+
+          <!-- Task Items List -->
+          <div id="tasksContainer" class="space-y-2 mt-3 max-h-[280px] overflow-y-auto pr-1">
+            <!-- Dynamically populated checkboxes -->
+          </div>
+
+          <!-- Add Custom Task Form -->
+          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2">
+            <input type="text" id="newTaskInput" placeholder="Add administrative task..." class="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-sky-500">
+            <button onclick="handleAddNewTask()" class="px-3 py-1.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span id="ui-btn-add-task">Add</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- BOTTOM SECTION: CLINICAL TRACEABILITY & SOURCE VERIFIER (AUDIT LOG) -->
+    <section class="chronicle-card p-5 mt-8">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 id="ui-audit-title" class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+            Clinical Traceability & Source Verifier (Audit Log)
+          </h2>
+          <p id="ui-audit-subtitle" class="text-xs text-slate-500 dark:text-slate-400">
+            Human-in-the-loop transparent record of all automated parsing and delta synthesis
+          </p>
+        </div>
+        <span class="inline-flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1 rounded-full font-medium">
+          <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+          Audit Trail Active
+        </span>
+      </div>
+
+      <!-- Audit Log Structured Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
+        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300">
+          <thead class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-700">
+            <tr>
+              <th scope="col" class="px-4 py-3" id="ui-th-timestamp">Timestamp</th>
+              <th scope="col" class="px-4 py-3" id="ui-th-action">AI Agent Action Description</th>
+              <th scope="col" class="px-4 py-3" id="ui-th-source">Source Artifact</th>
+              <th scope="col" class="px-4 py-3" id="ui-th-extracted">Parameters Normalized</th>
+              <th scope="col" class="px-4 py-3" id="ui-th-confidence">Status</th>
+              <th scope="col" class="px-4 py-3 text-right" id="ui-th-actions">Inspector</th>
+            </tr>
+          </thead>
+          <tbody id="auditTableBody" class="divide-y divide-slate-100 dark:divide-slate-700 bg-white dark:bg-slate-850">
+            <!-- Dynamically populated audit entries -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER: FIXED REGULATORY DISCLAIMER -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 lg:px-8 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-5xl mx-auto space-y-1">
+      <p id="ui-footer-disclaimer" class="font-normal text-[11px] leading-relaxed">
+        NON-DIAGNOSTIC & REGULATORY NOTICE: Care Chronicle is strictly an organizational and assistive workflow tool designed to reduce clinician administrative burden during outpatient oncology consultations. It does not diagnose, prescribe, or provide clinical decision support. All clinical evaluations, treatment decisions, and orders remain the sole responsibility of the licensed oncologist. All data shown is 100% synthetic.
+      </p>
+      <p class="text-[10px] text-slate-400 dark:text-slate-500">
+        Care Chronicle Outpatient Oncology Assistant • Anonymized Multi-Patient Demonstration Suite
+      </p>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS SECTION: NEVER RAW TEXT / NOTEPAD PREVIEWS                         -->
+  <!-- ========================================================================= -->
+
+  <!-- 1. CLINICAL DOCUMENT MODAL (Digital Medical Document with Hospital Letterhead) -->
+  <div id="documentModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col border border-slate-200 dark:border-slate-700 overflow-hidden">
+      
+      <!-- Modal Top Bar -->
+      <div class="px-6 py-3.5 bg-slate-100 dark:bg-slate-750 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+        <div class="flex items-center space-x-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
+          <i data-lucide="file-text" class="w-4 h-4 text-sky-600"></i>
+          <span>Clinician Document Viewer • Structured Medical Artifact</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 flex items-center gap-1.5 transition">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span id="ui-modal-print">Download / Print</span>
+          </button>
+          <button onclick="closeDocumentModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body: Styled Hospital PDF / Letterhead -->
+      <div id="documentModalContent" class="p-6 md:p-8 overflow-y-auto space-y-6">
+        <!-- Dynamically injected hospital layout with Celabs Diagnostics logo/header -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3 bg-slate-50 dark:bg-slate-750 border-t border-slate-200 dark:border-slate-700 flex justify-end">
+        <button onclick="closeDocumentModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs transition">
+          <span id="ui-modal-close">Close</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. SOURCE INSPECTION & TRACEABILITY MODAL -->
+  <div id="inspectionModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700 overflow-hidden">
+      
+      <div class="px-6 py-4 bg-slate-100 dark:bg-slate-750 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+        <div class="flex items-center space-x-2 text-sm font-bold text-slate-800 dark:text-white">
+          <i data-lucide="shield-alert" class="w-4 h-4 text-emerald-600"></i>
+          <span>Clinical Traceability Inspector • Human-in-the-Loop Verifier</span>
+        </div>
+        <button onclick="closeInspectionModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="inspectionModalContent" class="p-6 overflow-y-auto space-y-4">
+        <!-- Dynamically injected inspection details -->
+      </div>
+
+      <div class="px-6 py-3 bg-slate-50 dark:bg-slate-750 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
+        <span class="text-xs text-slate-400">Strict non-technical natural English verification protocol</span>
+        <button onclick="closeInspectionModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-semibold">
+          Dismiss
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- Frontend Logic -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
