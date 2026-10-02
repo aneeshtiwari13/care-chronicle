@@ -311,3 +311,6 @@ def serve_index():
     if os.path.exists(index_path):
         return FileResponse(index_path)
     return JSONResponse({"message": "Care Chronicle API is active. Static files loading."})
+
+if os.path.exists(STATIC_DIR):
+    app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="site_root")

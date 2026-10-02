@@ -4,6 +4,10 @@
 > 
 > *Strictly Assistive, Non-Diagnostic, and Workflow-First • Operates Exclusively on 100% Synthetic Medical Records.*
 
+### 🔗 Official Presentation & Evaluation Links
+- 🌐 **Live Interactive Web Prototype:** [https://aneeshtiwari13.github.io/care-chronicle/](https://aneeshtiwari13.github.io/care-chronicle/)
+- 💻 **Open-Source GitHub Repository:** [https://github.com/aneeshtiwari13/care-chronicle](https://github.com/aneeshtiwari13/care-chronicle)
+
 ---
 
 ## 🌟 Overview & Clinical Motivation
